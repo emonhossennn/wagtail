@@ -98,7 +98,7 @@ export const checkImageAltText = (
  * Defines custom Axe rules, mapping each check to its corresponding JavaScript function.
  * This object holds the custom checks that will be added to the Axe configuration.
  */
-export const customChecks = {
+export const customChecks: Record<string, (node: Element, options: any) => boolean> = {
   'check-image-alt-text': checkImageAltText,
   // Add other custom checks here
 };
