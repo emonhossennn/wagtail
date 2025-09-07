@@ -4,6 +4,7 @@ from django.contrib.auth.models import Group, Permission
 from django.test import TestCase, override_settings
 from django.urls import NoReverseMatch, reverse
 from django.utils import timezone
+from django.utils.safestring import SafeString
 
 from wagtail.admin.utils import get_user_display_name
 from wagtail.locks import WorkflowLock
@@ -710,8 +711,10 @@ class TestWorkflowLock(BaseLockingTestCase):
         self.assertIsInstance(lock, WorkflowLock)
         self.assertTrue(lock.for_user(self.user))
         self.assertFalse(lock.for_user(self.moderator))
+        message = lock.get_message(self.user)
+        self.assertIsInstance(message, SafeString)
         self.assertEqual(
-            lock.get_message(self.user),
+            message,
             "This full-featured snippet is currently awaiting moderation. "
             "Only reviewers for this task can edit the full-featured snippet.",
         )
@@ -725,8 +728,10 @@ class TestWorkflowLock(BaseLockingTestCase):
         WorkflowTask.objects.create(workflow=workflow, task=other_task, sort_order=2)
 
         lock = self.snippet.get_lock()
+        message = lock.get_message(self.user)
+        self.assertIsInstance(message, SafeString)
         self.assertEqual(
-            lock.get_message(self.user),
+            message,
             "This full-featured snippet is awaiting <b>'test_task'</b> in the "
             "<b>'test_workflow'</b> workflow. Only reviewers for this task "
             "can edit the full-featured snippet.",

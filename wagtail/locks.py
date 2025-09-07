@@ -1,6 +1,5 @@
 from django.conf import settings
 from django.utils.html import format_html
-from django.utils.safestring import mark_safe
 from django.utils.text import capfirst
 from django.utils.translation import gettext as _
 
@@ -180,14 +179,14 @@ class WorkflowLock(BaseLock):
                 )
                 # Make sure message is correctly capitalised even if it
                 # starts with model_name.
-                workflow_info = mark_safe(capfirst(workflow_info))
+                workflow_info = format_html(capfirst(workflow_info))
 
             reviewers_info = capfirst(
                 _("Only reviewers for this task can edit the %(model_name)s.")
                 % {"model_name": self.model_name}
             )
 
-            return mark_safe(workflow_info + " " + reviewers_info)
+            return format_html("{} {}", workflow_info, reviewers_info)
 
     def get_icon(self, user, can_lock=False):
         if can_lock:
@@ -254,7 +253,7 @@ class ScheduledForPublishLock(BaseLock):
             title=scheduled_revision.object_str,
             datetime=render_timestamp(scheduled_revision.approved_go_live_at),
         )
-        return mark_safe(capfirst(message))
+        return format_html(capfirst(message))
 
     def get_locked_by(self, user):
         return _("Locked by schedule")
