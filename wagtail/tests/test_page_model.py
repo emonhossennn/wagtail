@@ -14,6 +14,7 @@ from django.test import Client, TestCase, override_settings
 from django.test.client import RequestFactory
 from django.urls import reverse
 from django.utils import timezone, translation
+from django.utils.safestring import SafeString
 from freezegun import freeze_time
 
 from wagtail.actions.copy_for_translation import ParentNotTranslatedError
@@ -3997,8 +3998,10 @@ class TestGetLock(TestCase):
         self.assertIsInstance(lock, WorkflowLock)
         self.assertTrue(lock.for_user(christmas_event.owner))
         self.assertFalse(lock.for_user(moderator))
+        message = lock.get_message(christmas_event.owner)
+        self.assertIsInstance(message, SafeString)
         self.assertEqual(
-            lock.get_message(christmas_event.owner),
+            message,
             "This page is currently awaiting moderation. Only reviewers for this task can edit the page.",
         )
         self.assertIsNone(lock.get_message(moderator))
@@ -4010,8 +4013,10 @@ class TestGetLock(TestCase):
         WorkflowTask.objects.create(workflow=workflow, task=other_task, sort_order=2)
 
         lock = christmas_event.get_lock()
+        message = lock.get_message(christmas_event.owner)
+        self.assertIsInstance(message, SafeString)
         self.assertEqual(
-            lock.get_message(christmas_event.owner),
+            message,
             "This page is awaiting <b>'test_task'</b> in the <b>'test_workflow'</b> workflow. Only reviewers for this task can edit the page.",
         )
 
@@ -4036,8 +4041,10 @@ class TestGetLock(TestCase):
         else:
             expected_date_string = "July 29, 2030, 4:32 p.m."
 
+        message = lock.get_message(christmas_event.owner)
+        self.assertIsInstance(message, SafeString)
         self.assertEqual(
-            lock.get_message(christmas_event.owner),
+            message,
             f"Page 'Christmas' is locked and has been scheduled to go live at {expected_date_string}",
         )
 
