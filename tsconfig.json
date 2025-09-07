@@ -7,7 +7,7 @@
     "jsx": "react",
     "lib": ["ES2023", "ES2023.Intl", "DOM", "DOM.iterable"],
     "moduleResolution": "node",
-    "noImplicitAny": false, // TODO: Enable once all existing code is typed
+    "noImplicitAny": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "resolveJsonModule": true,
@@ -16,15 +16,19 @@
     "strictPropertyInitialization": true,
     "target": "ES2023"
   },
-  "files": [
-    "client/src/index.ts",
-    "client/src/custom.d.ts",
-    "client/storybook/stories.d.ts"
-  ],
-  "include": ["client/src", "wagtail"],
+  "files": ["client/src/custom.d.ts"],
+  "include": ["client/src/utils", "client/src/includes"],
   "exclude": [
     "node_modules",
     "static",
+    "client/src/**/*.test.ts",
+    "client/src/**/*.test.tsx",
+    "client/src/**/*.stories.tsx",
+    "client/src/**/*.stories.ts",
+    "client/src/**/*.stories.js",
+    "client/src/components",
+    "client/storybook",
+    "wagtail/**/*.stories.tsx",
     // Files with template syntax.
     "wagtail/contrib/search_promotions/templates/wagtailsearchpromotions/includes/searchpromotions_formset.js"
   ]

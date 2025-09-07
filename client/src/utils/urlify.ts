@@ -1,6 +1,6 @@
 import config from './urlify.config.json';
 
-const cache = {};
+const cache: Record<string, (input: string) => string> = {};
 
 /**
  * Create a transliterate function based on the locale.
@@ -9,13 +9,13 @@ const cache = {};
  * @see https://czo.gov.ua/en/translit (Ukrainian)
  * @see https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes
  */
-const createTransliterateFn = (locale = '') => {
+const createTransliterateFn = (locale = ''): ((str: string) => string) => {
   if (cache[locale]) return cache[locale];
 
   // prepare the language part of the locale for comparison only
   const [langCode] = locale.toLowerCase().split('-');
 
-  const downcodeMapping = Object.fromEntries(
+  const downcodeMapping: Record<string, string> = Object.fromEntries(
     config
       .map((item) => Object.entries(item))
       .flat()
@@ -39,7 +39,8 @@ const createTransliterateFn = (locale = '') => {
 
   const regex = new RegExp(Object.keys(downcodeMapping).join('|'), 'g');
 
-  const fn = (str) => str.replace(regex, (item) => downcodeMapping[item]);
+  const fn = (str: string) =>
+    str.replace(regex, (item: string) => downcodeMapping[item]);
   cache[langCode] = fn;
 
   return fn;

@@ -17,7 +17,7 @@ export const getWordCount = (lang: string, text: string): number => {
  * Study preprint: @see https://osf.io/preprints/psyarxiv/xynwg/
  * DOI: @see https://doi.org/10.1016/j.jml.2019.104047
  */
-const readingSpeeds = {
+const readingSpeeds: Record<string, number> = {
   ar: 181, // Arabic
   zh: 260, // Chinese
   nl: 228, // Dutch

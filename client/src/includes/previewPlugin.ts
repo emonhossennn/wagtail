@@ -28,7 +28,7 @@ export const wagtailPreviewPlugin: AxePlugin = {
           action: action,
           options: options,
         },
-        (results) => {
+        (results: unknown) => {
           // Pass the results from the preview iframe to the callback.
           callback(results);
         },
